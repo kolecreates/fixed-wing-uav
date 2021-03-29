@@ -45,8 +45,6 @@ void bmp388_init()
 {
   bmp388_write_byte(BMP388_REG_ADD_CMD, BMP388_REG_VAL_SOFT_RESET);
 
-  bmp388_write_byte(BMP388_REG_ADD_PWR_CTRL, BMP388_REG_VAL_PRESS_EN | BMP388_REG_VAL_TEMP_EN | BMP388_REG_VAL_NORMAL_MODE);
-
   bmp388_read_bytes(BMP388_REG_ADD_CALIB_PARAMS, (uint8_t*)&bmp388_params, sizeof(bmp388_params));
 
   // Calculate the floating point parameters
@@ -64,6 +62,8 @@ void bmp388_init()
   bmp388_float_params.P9 = (float)bmp388_params.P9 / powf(2.0f, 48.0f);
   bmp388_float_params.P10 = (float)bmp388_params.P10 / powf(2.0f, 48.0f);
   bmp388_float_params.P11 = (float)bmp388_params.P11 / powf(2.0f, 65.0f);
+
+  bmp388_write_byte(BMP388_REG_ADD_PWR_CTRL, BMP388_REG_VAL_ENABLE_PRESS | BMP388_REG_VAL_ENABLE_TEMP | BMP388_REG_VAL_NORMAL_MODE);
 }
 
 uint8_t bmp388_get_measurements(volatile float &temperature, volatile float &pressure, volatile float &altitude)

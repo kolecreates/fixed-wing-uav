@@ -5,8 +5,6 @@ float temperature, pressure, altitude;
 void setup(){
   Serial.begin(115200);
   Wire.begin();
-  Wire.setClock(400000);
-  Serial.println("Starting Init...");
   bmp388_init();
   Serial.println("Initialized");
 }
@@ -21,5 +19,5 @@ void loop(){
     Serial.print(altitude);
     Serial.println(F("m"));  
   }
-  delay(500);
+  delay(1000);
 }   
