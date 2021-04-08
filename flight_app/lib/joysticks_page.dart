@@ -1,9 +1,10 @@
 import 'dart:math';
 
+import 'package:flight_app/constants.dart';
+import 'package:flight_app/joystick_view.dart';
 import 'package:flight_app/service.dart';
 import 'package:flutter/material.dart';
 
-import 'package:control_pad/control_pad.dart';
 import 'package:flutter/services.dart';
 
 class JoysticksPage extends StatefulWidget {
@@ -33,12 +34,6 @@ class _JoystickPageState extends State<JoysticksPage> {
     super.dispose();
   }
 
-  Point getPointFromDegDist(double deg, double dist) {
-    double rad = deg * 0.0174533;
-
-    return Point(dist * cos(rad), dist * sin(rad) * -1);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,30 +41,56 @@ class _JoystickPageState extends State<JoysticksPage> {
         title: Text('Joystick Control'),
       ),
       body: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: Column(
           children: [
-            JoystickView(
-              onDirectionChanged: (deg, dist) {
-                Point p = getPointFromDegDist(deg, dist);
-
-                Service.instance.sendLeftJoystickCommand(
-                    p.y, p.x); //flip x/y because landscape orientation
-              },
-              interval: Duration(milliseconds: 500),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                JoystickView(
+                  onDirectionChanged: (p) {
+                    Service.instance.sendLeftJoystickCommand(p.dx, p.dy * -1);
+                  },
+                  interval: Duration(milliseconds: 500),
+                ),
+                JoystickView(
+                  onDirectionChanged: (p) {
+                    Service.instance.sendRightJoystickCommand(p.dx, p.dy * -1);
+                  },
+                  interval: Duration(milliseconds: 500),
+                ),
+              ],
             ),
-            JoystickView(
-              onDirectionChanged: (deg, dist) {
-                Point p = getPointFromDegDist(deg, dist);
-
-                Service.instance.sendRightJoystickCommand(
-                    p.y, p.x); //flip x/y because landscape orientation
-              },
-              interval: Duration(milliseconds: 500),
-            ),
+            _Slider(),
           ],
         ),
       ),
     );
+  }
+}
+
+class _Slider extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _SliderState();
+  }
+}
+
+class _SliderState extends State<_Slider> {
+  double value = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+        min: 0,
+        max: 180,
+        value: this.value,
+        onChanged: (newValue) {
+          setState(() {
+            value = newValue;
+          });
+        },
+        onChangeEnd: (endValue) {
+          Service.instance.sendPositionCommand(
+              COMMAND.THROTTLE, value.clamp(0, 180).toInt());
+        });
   }
 }

@@ -4,4 +4,5 @@ enum COMMAND {
   RIGHT_WING,
   RUDDER,
   FLAPS,
+  PING,
 }

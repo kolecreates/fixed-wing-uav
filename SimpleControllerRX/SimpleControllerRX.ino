@@ -22,7 +22,8 @@ enum ServoEnum {
   LEFT_WING,
   RIGHT_WING,
   RUDDER,
-  FLAPS
+  FLAPS,
+  PING
 };
 
 struct PayloadStruct {
@@ -31,6 +32,9 @@ struct PayloadStruct {
 };
 
 PayloadStruct payload;
+
+const unsigned int MS_BEFORE_SIGNAL_DISCONNECT_SHUTOFF = 5000;
+unsigned long lastPayloadTime = 0;
 
 void setup() {
 
@@ -53,6 +57,7 @@ void setup() {
 void loop() {
   if(radio.available()){
     radio.read(&payload, sizeof(payload));
+    lastPayloadTime = millis();
     if(payload.servo == THROTTLE){
       servo_throttle.write(payload.pos);
     }else if(payload.servo == LEFT_WING){
@@ -64,5 +69,7 @@ void loop() {
     }else if(payload.servo == FLAPS){
       servo_flaps.write(payload.pos);
     }
+  }else if(millis() - lastPayloadTime > MS_BEFORE_SIGNAL_DISCONNECT_SHUTOFF){
+    servo_throttle.write(SERVO_MIN);
   }
 }

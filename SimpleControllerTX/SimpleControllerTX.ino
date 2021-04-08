@@ -15,7 +15,8 @@ enum ServoEnum {
   LEFT_WING,
   RIGHT_WING,
   RUDDER,
-  FLAPS
+  FLAPS,
+  PING
 };
 
 struct PayloadStruct {
@@ -45,9 +46,7 @@ void loop() {
       payload.servo = static_cast<ServoEnum>(payload_string.charAt(0) - '0');
       payload.pos = payload_string.substring(1).toInt();
       radio.write(&payload, sizeof(payload));
-      Serial.print(payload.servo);
-      Serial.print(payload.pos);
-      Serial.println("");
+      Serial.println(payload_string);
       payload_string = "";
     }else{
       payload_string.concat(c);
