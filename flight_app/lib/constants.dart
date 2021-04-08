@@ -1,0 +1,7 @@
+enum COMMAND {
+  THROTTLE,
+  LEFT_WING,
+  RIGHT_WING,
+  RUDDER,
+  FLAPS,
+}
