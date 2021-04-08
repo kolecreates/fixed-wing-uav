@@ -11,7 +11,8 @@ RF24 radio(9, 8); //CE pin, CSN pin
 const byte radio_address[6] = "00001";
 
 enum ServoEnum {
-  LEFT_WING = 0,
+  THROTTLE = 0,
+  LEFT_WING,
   RIGHT_WING,
   RUDDER,
   FLAPS
@@ -46,7 +47,7 @@ void loop() {
       radio.write(&payload, sizeof(payload));
       Serial.print(payload.servo);
       Serial.print(payload.pos);
-      Serial.println();
+      Serial.println("");
       payload_string = "";
     }else{
       payload_string.concat(c);
