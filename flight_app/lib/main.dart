@@ -13,7 +13,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (_) => Service(),
+      create: (_) => Service.instance,
       child: MaterialApp(
         title: 'Flight App',
         theme: ThemeData(

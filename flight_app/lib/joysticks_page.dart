@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:control_pad/control_pad.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 class JoysticksPage extends StatefulWidget {
   @override
@@ -20,7 +19,6 @@ class _JoystickPageState extends State<JoysticksPage> {
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
     ]);
   }
 
@@ -38,36 +36,39 @@ class _JoystickPageState extends State<JoysticksPage> {
   Point getPointFromDegDist(double deg, double dist) {
     double rad = deg * 0.0174533;
 
-    return Point(dist * cos(rad), dist * sin(rad));
+    return Point(dist * cos(rad), dist * sin(rad) * -1);
   }
 
   @override
   Widget build(BuildContext context) {
-    var service = Provider.of<Service>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu'),
+        title: Text('Joystick Control'),
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          JoystickView(
-            onDirectionChanged: (deg, dist) {
-              Point p = getPointFromDegDist(deg, dist);
+      body: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            JoystickView(
+              onDirectionChanged: (deg, dist) {
+                Point p = getPointFromDegDist(deg, dist);
 
-              service.sendLeftJoystickCommand(p.x, p.y);
-            },
-            interval: Duration(milliseconds: 250),
-          ),
-          JoystickView(
-            onDirectionChanged: (deg, dist) {
-              Point p = getPointFromDegDist(deg, dist);
+                Service.instance.sendLeftJoystickCommand(
+                    p.y, p.x); //flip x/y because landscape orientation
+              },
+              interval: Duration(milliseconds: 500),
+            ),
+            JoystickView(
+              onDirectionChanged: (deg, dist) {
+                Point p = getPointFromDegDist(deg, dist);
 
-              service.sendRightJoystickCommand(p.x, p.y);
-            },
-            interval: Duration(milliseconds: 250),
-          ),
-        ],
+                Service.instance.sendRightJoystickCommand(
+                    p.y, p.x); //flip x/y because landscape orientation
+              },
+              interval: Duration(milliseconds: 500),
+            ),
+          ],
+        ),
       ),
     );
   }

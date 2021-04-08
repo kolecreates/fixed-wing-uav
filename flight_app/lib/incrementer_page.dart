@@ -1,7 +1,6 @@
 import 'package:flight_app/constants.dart';
 import 'package:flight_app/service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class IncrementerPage extends StatelessWidget {
   @override
@@ -78,8 +77,7 @@ class _IncrementerState extends State<_Incrementer> {
               pos = pos.clamp(widget.min, widget.max);
             });
 
-            Provider.of<Service>(context)
-                .sendPositionCommand(widget.command, pos);
+            Service.instance.sendPositionCommand(widget.command, pos);
           },
           icon: Icon(Icons.add),
           label: Text("Inc"),
@@ -91,8 +89,7 @@ class _IncrementerState extends State<_Incrementer> {
               pos -= widget.step;
               pos = pos.clamp(widget.min, widget.max);
             });
-            Provider.of<Service>(context)
-                .sendPositionCommand(widget.command, pos);
+            Service.instance.sendPositionCommand(widget.command, pos);
           },
           icon: Icon(Icons.remove),
           label: Text("Dec"),

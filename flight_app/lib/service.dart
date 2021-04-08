@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 class Service extends ChangeNotifier {
+  static Service instance = Service();
   BluetoothConnection connection;
 
   void setConnection(BluetoothConnection connection) {
@@ -14,7 +15,7 @@ class Service extends ChangeNotifier {
 
   bool sendPositionCommand(COMMAND command, int position) {
     if (this.connection != null && this.connection.isConnected) {
-      this.connection.output.add(_encodePositionCommand(command, position));
+      this.connection.output.add(utf8.encode("${command.index}$position\n"));
       return true;
     } else {
       return false;
@@ -27,10 +28,8 @@ class Service extends ChangeNotifier {
       int rightWingPos = _mapJoystickValToRange(x, 130, 50).toInt();
       int throttlePos = _mapJoystickValToRange(y - 1, 0, 360)
           .toInt(); // force only upper half of joystick to control throttle
-      List<int> data = _encodePositionCommand(COMMAND.LEFT_WING, leftWingPos);
-      data.addAll(_encodePositionCommand(COMMAND.RIGHT_WING, rightWingPos));
-      data.addAll(_encodePositionCommand(COMMAND.THROTTLE, throttlePos));
-      this.connection.output.add(data);
+      this.connection.output.add(utf8.encode(
+          "${COMMAND.LEFT_WING.index}$leftWingPos\n${COMMAND.RIGHT_WING.index}$rightWingPos\n${COMMAND.THROTTLE.index}$throttlePos\n"));
       return true;
     }
     return false;
@@ -40,9 +39,8 @@ class Service extends ChangeNotifier {
     if (this.connection != null && this.connection.isConnected) {
       int rudderPos = _mapJoystickValToRange(x, 50, 130).toInt();
       int flapsPos = _mapJoystickValToRange(y, 50, 130).toInt();
-      List<int> data = _encodePositionCommand(COMMAND.RUDDER, rudderPos);
-      data.addAll(_encodePositionCommand(COMMAND.FLAPS, flapsPos));
-      this.connection.output.add(data);
+      this.connection.output.add(utf8.encode(
+          "${COMMAND.RUDDER.index}$rudderPos\n${COMMAND.FLAPS.index}$flapsPos\n"));
       return true;
     }
     return false;
@@ -54,9 +52,5 @@ class Service extends ChangeNotifier {
 
   num _normalize(num x, num min, num max) {
     return (x - min) / (max - min);
-  }
-
-  List<int> _encodePositionCommand(COMMAND command, int pos) {
-    return utf8.encode("${command.index.toString()}${pos.toString()}\n");
   }
 }

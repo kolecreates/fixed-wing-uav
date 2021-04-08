@@ -1,7 +1,6 @@
 import 'package:flight_app/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:provider/provider.dart';
 
 class ConnectPage extends StatefulWidget {
   @override
@@ -75,7 +74,7 @@ class _ConnectListItemState extends State<_ConnectListItem> {
           });
           BluetoothConnection.toAddress(widget.device.address).then((value) {
             setState(() {
-              Provider.of<Service>(context).setConnection(value);
+              Service.instance.setConnection(value);
               isConnected = true;
               connecting = false;
             });
