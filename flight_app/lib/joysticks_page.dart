@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flight_app/constants.dart';
 import 'package:flight_app/joystick_view.dart';
 import 'package:flight_app/service.dart';
@@ -43,6 +41,7 @@ class _JoystickPageState extends State<JoysticksPage> {
       body: Container(
         child: Column(
           children: [
+            _WingTrimSlider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -50,17 +49,15 @@ class _JoystickPageState extends State<JoysticksPage> {
                   onDirectionChanged: (p) {
                     Service.instance.sendLeftJoystickCommand(p.dx, p.dy * -1);
                   },
-                  interval: Duration(milliseconds: 500),
                 ),
                 JoystickView(
                   onDirectionChanged: (p) {
                     Service.instance.sendRightJoystickCommand(p.dx, p.dy * -1);
                   },
-                  interval: Duration(milliseconds: 500),
                 ),
               ],
             ),
-            _Slider(),
+            _ThrottleSlider(),
           ],
         ),
       ),
@@ -68,14 +65,38 @@ class _JoystickPageState extends State<JoysticksPage> {
   }
 }
 
-class _Slider extends StatefulWidget {
+class _WingTrimSlider extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _SliderState();
+    return _WingTrimSliderState();
   }
 }
 
-class _SliderState extends State<_Slider> {
+class _WingTrimSliderState extends State<_WingTrimSlider> {
+  double value = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+        value: this.value,
+        onChanged: (newValue) {
+          setState(() {
+            value = newValue;
+          });
+        },
+        onChangeEnd: (endValue) {
+          Service.instance.setWingTrim(value);
+        });
+  }
+}
+
+class _ThrottleSlider extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _ThrottleSliderState();
+  }
+}
+
+class _ThrottleSliderState extends State<_ThrottleSlider> {
   double value = 0;
   @override
   Widget build(BuildContext context) {
@@ -89,8 +110,8 @@ class _SliderState extends State<_Slider> {
           });
         },
         onChangeEnd: (endValue) {
-          Service.instance.sendPositionCommand(
-              COMMAND.THROTTLE, value.clamp(0, 180).toInt());
+          Service.instance
+              .sendPositionCommand(SERVO.THROTTLE, value.clamp(0, 180).toInt());
         });
   }
 }

@@ -13,23 +13,23 @@ class IncrementerPage extends StatelessWidget {
         crossAxisCount: 2,
         children: List.from([
           _Incrementer(
-            command: COMMAND.THROTTLE,
+            servo: SERVO.THROTTLE,
             initialPos: 0,
           ),
           _Incrementer(
-            command: COMMAND.LEFT_WING,
+            servo: SERVO.LEFT_WING,
             initialPos: 90,
           ),
           _Incrementer(
-            command: COMMAND.RIGHT_WING,
+            servo: SERVO.RIGHT_WING,
             initialPos: 90,
           ),
           _Incrementer(
-            command: COMMAND.RUDDER,
+            servo: SERVO.RUDDER,
             initialPos: 90,
           ),
           _Incrementer(
-            command: COMMAND.FLAPS,
+            servo: SERVO.ELEVATOR,
             initialPos: 90,
           ),
         ]),
@@ -39,13 +39,13 @@ class IncrementerPage extends StatelessWidget {
 }
 
 class _Incrementer extends StatefulWidget {
-  final COMMAND command;
+  final SERVO servo;
   final int initialPos;
   final int step;
   final int min;
   final int max;
   _Incrementer({
-    this.command,
+    this.servo,
     this.initialPos,
     this.step = 5,
     this.min = 0,
@@ -69,7 +69,7 @@ class _IncrementerState extends State<_Incrementer> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(widget.command.toString().split(".")[1]),
+        Text(widget.servo.toString().split(".")[1]),
         ElevatedButton.icon(
           onPressed: () {
             setState(() {
@@ -77,7 +77,7 @@ class _IncrementerState extends State<_Incrementer> {
               pos = pos.clamp(widget.min, widget.max);
             });
 
-            Service.instance.sendPositionCommand(widget.command, pos);
+            Service.instance.sendPositionCommand(widget.servo, pos);
           },
           icon: Icon(Icons.add),
           label: Text("Inc"),
@@ -89,7 +89,7 @@ class _IncrementerState extends State<_Incrementer> {
               pos -= widget.step;
               pos = pos.clamp(widget.min, widget.max);
             });
-            Service.instance.sendPositionCommand(widget.command, pos);
+            Service.instance.sendPositionCommand(widget.servo, pos);
           },
           icon: Icon(Icons.remove),
           label: Text("Dec"),

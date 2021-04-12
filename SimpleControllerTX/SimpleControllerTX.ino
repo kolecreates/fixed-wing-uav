@@ -10,46 +10,45 @@ SoftwareSerial BT(6, 7);
 RF24 radio(9, 8); //CE pin, CSN pin
 const byte radio_address[6] = "00001";
 
-enum ServoEnum {
-  THROTTLE = 0,
-  LEFT_WING,
-  RIGHT_WING,
-  RUDDER,
-  FLAPS,
-  PING
-};
-
 struct PayloadStruct {
-  ServoEnum servo;
-  unsigned int pos;
+  byte throttle;
+  byte left_wing;
+  byte right_wing;
+  byte rudder;
+  byte elevator;
 };
 
 PayloadStruct payload;
 
 void setup() {
-  Serial.begin(9600);
+//  Serial.begin(9600);
   BT.begin(9600);
   radio.begin();
-  radio.setAutoAck(false);
-  radio.setPayloadSize(sizeof(payload));
-  radio.setDataRate(RF24_250KBPS);
   radio.openWritingPipe(radio_address);
+  radio.setPayloadSize(sizeof(payload));
+  radio.setAutoAck(false);
+  radio.setDataRate(RF24_250KBPS);
+  radio.setPALevel(RF24_PA_MAX);
   radio.stopListening();
 }
 
-String payload_string = "";
-
 void loop() {
-  while(BT.available()){
-    char c = BT.read();
-    if(c == '\n'){
-      payload.servo = static_cast<ServoEnum>(payload_string.charAt(0) - '0');
-      payload.pos = payload_string.substring(1).toInt();
-      radio.write(&payload, sizeof(payload));
-      Serial.println(payload_string);
-      payload_string = "";
-    }else{
-      payload_string.concat(c);
-    }
+  if(BT.available() > 4){
+    payload.throttle = BT.read();
+    payload.left_wing = BT.read();
+    payload.right_wing = BT.read();
+    payload.rudder = BT.read();
+    payload.elevator = BT.read();
+    radio.write(&payload, sizeof(payload));
+//    Serial.print("Throttle: ");
+//    Serial.println(payload.throttle);
+//    Serial.print("LWing: ");
+//    Serial.println(payload.left_wing);
+//    Serial.print("RWing: ");
+//    Serial.println(payload.right_wing);
+//    Serial.print("Rudder: ");
+//    Serial.println(payload.rudder);
+//    Serial.print("Elevator: ");
+//    Serial.println(payload.elevator);
   }
 }
