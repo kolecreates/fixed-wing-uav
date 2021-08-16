@@ -1,12 +1,13 @@
-enum SERVO {
-  THROTTLE,
-  LEFT_WING,
-  RIGHT_WING,
-  RUDDER,
-  ELEVATOR,
+enum COMMAND {
+  TAKE_OFF,
+  CRUISE,
+  LAND,
+  ROLL_LEFT,
+  ROLL_RIGHT,
+  PITCH_UP,
+  PITCH_DOWN,
+  THROTTLE_UP,
+  THROTTLE_DOWN,
+  KILL,
+  PING,
 }
-
-const int MIN_SERVO_STEP = 1;
-
-const int WING_POS_MIN = 20;
-const int WING_POS_MAX = 160;

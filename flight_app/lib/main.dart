@@ -1,6 +1,5 @@
 import 'package:flight_app/connect_page.dart';
-import 'package:flight_app/incrementer_page.dart';
-import 'package:flight_app/joysticks_page.dart';
+import 'package:flight_app/controller_page.dart';
 import 'package:flight_app/service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,12 +41,8 @@ class MenuPage extends StatelessWidget {
             routeBuilder: (_) => ConnectPage(),
           ),
           MenuButton(
-            label: "Incrementer",
-            routeBuilder: (_) => IncrementerPage(),
-          ),
-          MenuButton(
-            label: "Joysticks",
-            routeBuilder: (_) => JoysticksPage(),
+            label: "Controller",
+            routeBuilder: (_) => ControllerPage(),
           ),
         ]),
       ),

@@ -15,6 +15,7 @@ dependencies:
     sdk: flutter
   flutter_bluetooth_serial: ^0.2.2
   provider: ^5.0.0
+  joystick: ^1.1.0
 
 
 dev_dependencies:
