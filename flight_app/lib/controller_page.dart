@@ -56,27 +56,27 @@ class _ControllerPageState extends State<ControllerPage> {
                     iconColor: Colors.white,
                     joystickMode: JoystickModes.vertical,
                     onUpPressed: () {
-                      Service.instance.sendCommand(COMMAND.THROTTLE_UP);
+                      Service.instance.throttleUp();
                     },
                     onDownPressed: () {
-                      Service.instance.sendCommand(COMMAND.THROTTLE_DOWN);
+                      Service.instance.throttleDown();
                     },
                   ),
                 ),
                 IconButton(
                     icon: Icon(Icons.flight_takeoff),
                     onPressed: () {
-                      Service.instance.sendCommand(COMMAND.TAKE_OFF);
+                      Service.instance.takeoff();
                     }),
                 IconButton(
                     icon: Icon(Icons.flight),
                     onPressed: () {
-                      Service.instance.sendCommand(COMMAND.CRUISE);
+                      Service.instance.cruise();
                     }),
                 IconButton(
                     icon: Icon(Icons.flight_land),
                     onPressed: () {
-                      Service.instance.sendCommand(COMMAND.LAND);
+                      Service.instance.land();
                     }),
                 Container(
                   width: this.circleSize,
@@ -88,16 +88,16 @@ class _ControllerPageState extends State<ControllerPage> {
                     iconColor: Colors.white,
                     joystickMode: JoystickModes.all,
                     onUpPressed: () {
-                      Service.instance.sendCommand(COMMAND.PITCH_UP);
+                      Service.instance.pitchUp();
                     },
                     onDownPressed: () {
-                      Service.instance.sendCommand(COMMAND.PITCH_DOWN);
+                      Service.instance.pitchDown();
                     },
                     onLeftPressed: () {
-                      Service.instance.sendCommand(COMMAND.ROLL_LEFT);
+                      Service.instance.rollLeft();
                     },
                     onRightPressed: () {
-                      Service.instance.sendCommand(COMMAND.ROLL_RIGHT);
+                      Service.instance.rollRight();
                     },
                   ),
                 ),

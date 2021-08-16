@@ -10,7 +10,16 @@ SoftwareSerial BT(6, 7);
 RF24 radio(9, 8); //CE pin, CSN pin
 const byte radio_address[6] = "00011";
 
-byte payload;
+struct PayloadStruct {
+  byte throttle;
+  byte left_wing;
+  byte right_wing;
+  byte rudder;
+  byte elevator;
+};
+
+
+PayloadStruct payload;
 
 void setup() {
   BT.begin(9600);
@@ -24,8 +33,12 @@ void setup() {
 }
 
 void loop() {
-  if (BT.available() > 0) {
-    payload = BT.read();
+  if (BT.available() > 4) {
+    payload.throttle = BT.read();
+    payload.left_wing = BT.read();
+    payload.right_wing = BT.read();
+    payload.rudder = BT.read();
+    payload.elevator = BT.read();
     radio.write(&payload, sizeof(payload));
   }
 }
