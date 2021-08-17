@@ -45,60 +45,52 @@ class Service extends ChangeNotifier {
 
   void rollLeft() {
     var rw = _servoPositions[SERVO.RIGHT_WING];
-    var trimmed = (rw - ROLL_TRIM).clamp(WING_POS_MIN, WING_POS_MAX);
-    if (trimmed != rw) {
-      _servoPositions[SERVO.RIGHT_WING] = trimmed;
-      _servoPositions[SERVO.LEFT_WING] = trimmed;
-      _servoPositions[SERVO.RUDDER] = 90 + ROLL_RUDDER_TRIM;
-      _shouldSendNextTick = true;
-    }
+    var r = _servoPositions[SERVO.RUDDER];
+    var trimmed = (rw + ROLL_TRIM).clamp(WING_POS_MIN, WING_POS_MAX);
+    var rTrimmed = (r + ROLL_RUDDER_TRIM).clamp(RUDDER_POS_MIN, RUDDER_POS_MAX);
+    _servoPositions[SERVO.RIGHT_WING] = trimmed;
+    _servoPositions[SERVO.LEFT_WING] = trimmed;
+    _servoPositions[SERVO.RUDDER] = rTrimmed;
+    _shouldSendNextTick = true;
   }
 
   void rollRight() {
     var lw = _servoPositions[SERVO.LEFT_WING];
-    var trimmed = (lw + ROLL_TRIM).clamp(WING_POS_MIN, WING_POS_MAX);
-    if (trimmed != lw) {
-      _servoPositions[SERVO.LEFT_WING] = trimmed;
-      _servoPositions[SERVO.RIGHT_WING] = trimmed;
-      _servoPositions[SERVO.RUDDER] = 90 - ROLL_RUDDER_TRIM;
-      _shouldSendNextTick = true;
-    }
+    var r = _servoPositions[SERVO.RUDDER];
+    var trimmed = (lw - ROLL_TRIM).clamp(WING_POS_MIN, WING_POS_MAX);
+    var rTrimmed = (r - ROLL_RUDDER_TRIM).clamp(RUDDER_POS_MIN, RUDDER_POS_MAX);
+    _servoPositions[SERVO.LEFT_WING] = trimmed;
+    _servoPositions[SERVO.RIGHT_WING] = trimmed;
+    _servoPositions[SERVO.RUDDER] = rTrimmed;
+    _shouldSendNextTick = true;
   }
 
   void pitchUp() {
     var e = _servoPositions[SERVO.ELEVATOR];
-    var trimmed = (e - PITCH_TRIM).clamp(ELEVATOR_POS_MIN, ELEVATOR_POS_MAX);
-    if (trimmed != e) {
-      _servoPositions[SERVO.ELEVATOR] = trimmed;
-      _shouldSendNextTick = true;
-    }
+    var trimmed = (e + PITCH_TRIM).clamp(ELEVATOR_POS_MIN, ELEVATOR_POS_MAX);
+    _servoPositions[SERVO.ELEVATOR] = trimmed;
+    _shouldSendNextTick = true;
   }
 
   void pitchDown() {
     var e = _servoPositions[SERVO.ELEVATOR];
-    var trimmed = (e + PITCH_TRIM).clamp(ELEVATOR_POS_MIN, ELEVATOR_POS_MAX);
-    if (trimmed != e) {
-      _servoPositions[SERVO.ELEVATOR] = trimmed;
-      _shouldSendNextTick = true;
-    }
+    var trimmed = (e - PITCH_TRIM).clamp(ELEVATOR_POS_MIN, ELEVATOR_POS_MAX);
+    _servoPositions[SERVO.ELEVATOR] = trimmed;
+    _shouldSendNextTick = true;
   }
 
   void throttleUp() {
     var t = _servoPositions[SERVO.THROTTLE];
     var trimmed = (t + THROTTLE_TRIM).clamp(THROTTLE_MIN, THROTTLE_MAX);
-    if (trimmed != t) {
-      _servoPositions[SERVO.THROTTLE] = trimmed;
-      _shouldSendNextTick = true;
-    }
+    _servoPositions[SERVO.THROTTLE] = trimmed;
+    _shouldSendNextTick = true;
   }
 
   void throttleDown() {
     var t = _servoPositions[SERVO.THROTTLE];
     var trimmed = (t - THROTTLE_TRIM).clamp(THROTTLE_MIN, THROTTLE_MAX);
-    if (trimmed != t) {
-      _servoPositions[SERVO.THROTTLE] = trimmed;
-      _shouldSendNextTick = true;
-    }
+    _servoPositions[SERVO.THROTTLE] = trimmed;
+    _shouldSendNextTick = true;
   }
 
   void takeoff() {
@@ -120,6 +112,16 @@ class Service extends ChangeNotifier {
   void land() {
     _servoPositions[SERVO.THROTTLE] = THROTTLE_MIN;
     _wingTrim = FLAP_TRIM;
+    _shouldSendNextTick = true;
+  }
+
+  void reset() {
+    _servoPositions[SERVO.THROTTLE] = THROTTLE_MIN;
+    _servoPositions[SERVO.LEFT_WING] = 90;
+    _servoPositions[SERVO.RIGHT_WING] = 90;
+    _servoPositions[SERVO.RUDDER] = 90;
+    _servoPositions[SERVO.ELEVATOR] = 90;
+    _wingTrim = 0;
     _shouldSendNextTick = true;
   }
 }

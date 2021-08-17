@@ -78,6 +78,11 @@ class _ControllerPageState extends State<ControllerPage> {
                     onPressed: () {
                       Service.instance.land();
                     }),
+                IconButton(
+                    icon: Icon(Icons.undo),
+                    onPressed: () {
+                      Service.instance.reset();
+                    }),
                 Container(
                   width: this.circleSize,
                   height: this.circleSize,
