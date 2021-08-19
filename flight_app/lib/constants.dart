@@ -19,4 +19,4 @@ const int PITCH_TRIM = 10;
 const int THROTTLE_TRIM = 20;
 const int THROTTLE_MIN = 0;
 const int THROTTLE_MAX = 180;
-const int CRUISE_THROTTLE = 120;
+const int CRUISE_THROTTLE = 160;
