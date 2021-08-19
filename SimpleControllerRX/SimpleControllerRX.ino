@@ -43,6 +43,7 @@ void setup() {
   servo_rudder.attach(3);
   servo_elevator.attach(5);
 
+  servo_throttle.write(0);
   setPositions(0, 90, 90, 90, 90);
 
   radio.begin();
@@ -69,7 +70,7 @@ void enterLandingMode() {
 }
 
 void setPositions(byte t, byte lw, byte rw, byte r, byte e) {
-  if (t == 0) {
+  if (throttle_pos != t) {
     throttle_pos = t;
     servo_throttle.write(throttle_pos);
   }
